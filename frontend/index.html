@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Visualizer</title>
+</head>
+<body>
+  <div class="login-container">
+    <a href="/spotify/login">Login to Spotify</a>
+  </div>
+
+  <div class="header">
+    <div class="header-section">
+      <div class="song-info">
+        <div>
+          <span class="song-title">song</span>
+          <span class="album-title">album</span>
+        </div>
+        <div class="artist-name">artist</div>
+      </div>
+    </div>
+    <div class="header-section">
+      <i class="back button fa-xl fa-solid fa-backward"></i>
+      <i class="play button fa-xl fa-solid fa-play"></i>
+      <i class="pause button fa-xl fa-solid fa-pause"></i>
+      <i class="skip button fa-xl fa-solid fa-forward"></i>
+    </div>
+  </div>
+  <div class="body-container">
+    <img class="album-art" src="" crossorigin="anonymous" />
+  </div>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="color-thief.umd.js"></script>
+  <script src="tokens.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

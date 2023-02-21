@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  font-family: 'Press Start 2P', monospace;
+}
+
+body {
+  margin: 0; 
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  overflow: hidden;
+}
+
+.login-container {
+  display: none;
+  position: fixed;  
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #000000;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.login-container a {
+  text-decoration: none;
+  color: #1DD05E;
+  font-size: 24px;
+  padding: 24px;
+}
+
+.login-container a:hover {
+  color: white;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  padding: 0 24px;
+  width: 100%;
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+}
+
+.header-section > * {
+  padding: 24px;
+  margin: 0 6px;
+  color: white;
+}
+
+.body-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 2000ms all;
+  width: 100%;
+}
+
+.album-art {
+  padding: 0;
+  width: 640px;
+  height: 640px;
+  opacity: 0;
+  transition: 2000ms all;
+}
+
+.song-title {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.album-title {
+  font-size: 18px;
+  line-height: 24px;
+  opacity: 0.5;
+}
+
+.artist-name {
+  font-size: 14px;
+  margin-top: 18px;
+}
+
+.button {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.button:hover {
+  opacity: 1;
+}
+
+#pause {
+  display: none;
+}
