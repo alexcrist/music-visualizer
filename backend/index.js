@@ -75,7 +75,7 @@ app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
 });
 
-const requestSpotifyToken = async (formData) => {
+const requestSpotifyToken = async (formData, method='post') => {
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'post',
     body: new URLSearchParams(formData),
