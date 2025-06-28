@@ -33,6 +33,7 @@ const app = express();
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(path.resolve(__dirname, "../frontend")));
+app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
@@ -74,6 +75,61 @@ app.get("/spotify/login/refresh", async (req, res) => {
     refresh_token: req.query.refresh_token,
   });
   res.json(refreshResponse);
+});
+
+app.get("/spotify/playlists", async (req, res) => {
+  const accessToken = req.headers.authorization?.replace("Bearer ", "");
+  if (!accessToken) {
+    return res.status(401).json({ error: "Access token required" });
+  }
+
+  try {
+    const response = await fetch("https://api.spotify.com/v1/me/playlists", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching playlists:", error);
+    res.status(500).json({ error: "Failed to fetch playlists" });
+  }
+});
+
+app.post("/spotify/play", async (req, res) => {
+  const accessToken = req.headers.authorization?.replace("Bearer ", "");
+  if (!accessToken) {
+    return res.status(401).json({ error: "Access token required" });
+  }
+
+  const { playlistUri } = req.body;
+  if (!playlistUri) {
+    return res.status(400).json({ error: "Playlist URI required" });
+  }
+
+  try {
+    const response = await fetch("https://api.spotify.com/v1/me/player/play", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        context_uri: playlistUri,
+      }),
+    });
+
+    if (response.status === 204) {
+      res.json({ success: true });
+    } else {
+      const errorData = await response.json();
+      res.status(response.status).json(errorData);
+    }
+  } catch (error) {
+    console.error("Error starting playback:", error);
+    res.status(500).json({ error: "Failed to start playback" });
+  }
 });
 
 app.listen(config.port, () => {

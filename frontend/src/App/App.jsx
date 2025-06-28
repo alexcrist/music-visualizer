@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import AlbumDisplay from "../AlbumDisplay/AlbumDisplay";
 import LoginScreen from "../LoginScreen/LoginScreen";
 import PlayerHeader from "../PlayerHeader/PlayerHeader";
+import PlaylistList from "../PlaylistList/PlaylistList";
 import { useInitSpotify } from "../useInitSpotify";
 import styles from "./App.module.css";
 
@@ -21,6 +22,7 @@ const App = () => {
       }}
     >
       <PlayerHeader />
+      <PlaylistList />
       <AlbumDisplay />
     </div>
   );

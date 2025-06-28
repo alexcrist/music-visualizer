@@ -15,6 +15,10 @@ const mainSlice = createSlice({
 
     // UI state
     artworkColor: null,
+
+    // Playlist state
+    playlists: [],
+    selectedPlaylist: null,
   },
   reducers: {
     setTokens: (state, action) => {
@@ -36,6 +40,12 @@ const mainSlice = createSlice({
     },
     setArtworkColor: (state, action) => {
       state.artworkColor = action.payload;
+    },
+    setPlaylists: (state, action) => {
+      state.playlists = action.payload;
+    },
+    setSelectedPlaylist: (state, action) => {
+      state.selectedPlaylist = action.payload;
     },
   },
 });

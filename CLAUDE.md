@@ -15,7 +15,9 @@ Whenever making changes, unless specified (either explicitly or with a "[no pr]"
 
 The PR will then be reviewed and either merged or changes will be requested.
 
-Please, don't ever merge a PR.
+Please, don't ever merge a PR. Also, please, don't ever push the main branch. Thank you.
+
+When making commits, please do not co-author them as Claude.
 
 When creating PRs, a short description of the code changes is perfect, nothing more is needed.
 
