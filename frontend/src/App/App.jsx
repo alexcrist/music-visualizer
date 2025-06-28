@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import AlbumDisplay from "../AlbumDisplay/AlbumDisplay";
+import AlbumBar from "../AlbumBar/AlbumBar";
 import LoginScreen from "../LoginScreen/LoginScreen";
 import PlayerHeader from "../PlayerHeader/PlayerHeader";
 import PlaylistList from "../PlaylistList/PlaylistList";
@@ -15,15 +15,10 @@ const App = () => {
   }
 
   return (
-    <div
-      className={styles.container}
-      style={{
-        backgroundColor: artworkColor ? artworkColor + "66" : "unset",
-      }}
-    >
+    <div className={styles.container}>
       <PlayerHeader />
+      <AlbumBar />
       <PlaylistList />
-      <AlbumDisplay />
     </div>
   );
 };

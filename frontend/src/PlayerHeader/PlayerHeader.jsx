@@ -34,9 +34,6 @@ const PlayerHeader = () => {
           <div>
             <span className={styles.songTitle}>
               {currentTrack?.name || "song"}
-            </span>{" "}
-            <span className={styles.albumTitle}>
-              {currentTrack?.album?.name || "album"}
             </span>
           </div>
           <div className={styles.artistName}>
