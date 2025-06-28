@@ -53,7 +53,7 @@ const PlayerHeader = () => {
   const contrastColor = getContrastColor(artworkColor);
 
   return (
-    <div 
+    <div
       className={styles.header}
       style={{
         backgroundColor: artworkColor || "#000000",
@@ -72,7 +72,7 @@ const PlayerHeader = () => {
           />
         )}
       </div>
-      
+
       <div className={styles.songSection}>
         <div className={styles.songInfo}>
           <div className={styles.titleRow}>
@@ -90,7 +90,7 @@ const PlayerHeader = () => {
           </div>
         </div>
       </div>
-      
+
       <div className={styles.controlsSection}>
         <FaBackward
           className={styles.button}
@@ -113,15 +113,12 @@ const PlayerHeader = () => {
             style={{ color: contrastColor }}
           />
         )}
-        <FaForward 
-          className={styles.button} 
-          onClick={handleNext} 
+        <FaForward
+          className={styles.button}
+          onClick={handleNext}
           size="22"
           style={{ color: contrastColor }}
         />
-      </div>
-      
-      <div className={styles.menuSection}>
         <OverflowMenu contrastColor={contrastColor} />
       </div>
     </div>

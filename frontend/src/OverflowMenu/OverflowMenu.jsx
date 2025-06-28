@@ -12,7 +12,7 @@ const OverflowMenu = ({ contrastColor = "#ffffff" }) => {
     // Clear tokens from localStorage
     localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("REFRESH_TOKEN");
-    
+
     // Reset Redux state
     dispatch(mainSlice.actions.setTokens(null));
     dispatch(mainSlice.actions.setCurrentTrack(null));
@@ -23,7 +23,7 @@ const OverflowMenu = ({ contrastColor = "#ffffff" }) => {
     dispatch(mainSlice.actions.setArtworkColor(null));
     dispatch(mainSlice.actions.setIsPaused(true));
     dispatch(mainSlice.actions.setShowLogin(true));
-    
+
     setIsMenuOpen(false);
   };
 
@@ -37,15 +37,15 @@ const OverflowMenu = ({ contrastColor = "#ffffff" }) => {
 
   return (
     <div className={styles.menuContainer}>
-      <button 
-        className={styles.menuButton} 
+      <button
+        className={styles.menuButton}
         onClick={toggleMenu}
         aria-label="More options"
-        style={{ color: contrastColor }}
+        style={{ color: contrastColor + "99" }}
       >
         <FaEllipsisV size="16" />
       </button>
-      
+
       {isMenuOpen && (
         <>
           <div className={styles.overlay} onClick={closeMenu} />

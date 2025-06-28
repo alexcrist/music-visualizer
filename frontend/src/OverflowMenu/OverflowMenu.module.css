@@ -1,5 +1,6 @@
 .menuContainer {
   position: relative;
+  margin-left: 20px;
   display: inline-block;
 }
 
@@ -63,4 +64,12 @@
 .menuIcon {
   width: 14px;
   height: 14px;
+}
+
+@media screen and (max-width: 768px) {
+  .menuContainer {
+    position: absolute;
+    margin: 0;
+    right: 20px;
+  }
 }
