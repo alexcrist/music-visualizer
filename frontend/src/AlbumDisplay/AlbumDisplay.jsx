@@ -1,15 +1,19 @@
 import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import mainSlice from "../mainSlice";
 import { extractDominantColor } from "../utils/colorUtils";
 import styles from "./AlbumDisplay.module.css";
 
-const AlbumDisplay = ({ currentTrack, onColorExtracted }) => {
+const AlbumDisplay = () => {
   const imgRef = useRef(null);
+  const dispatch = useDispatch();
+  const currentTrack = useSelector((state) => state.main.currentTrack);
 
   const handleImageLoad = async () => {
-    if (imgRef.current && onColorExtracted) {
+    if (imgRef.current) {
       const color = await extractDominantColor(imgRef.current);
       if (color) {
-        onColorExtracted(color);
+        dispatch(mainSlice.actions.setArtworkColor(color));
       }
     }
   };

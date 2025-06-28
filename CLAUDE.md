@@ -1,85 +1,75 @@
-# CLAUDE.md
+# Claude
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Hello Claude, here are the preferred ways to interact with this codebase. Thanks!
 
-## Project Overview
+### How to make changes
 
-A Spotify music visualizer web application that connects to the Spotify Web API and Web Playback SDK to display currently playing music with visual effects based on album artwork colors.
+Whenever making changes, unless specified (either explicitly or with a "[no pr]" piece of text at the beginning of the prompt) always do so through a GitHub PR using git and the GitHub CLI.
 
-### Architecture
+- Start with a clean, freshly pulled version of the main branch
+- Create a new branch
+- Make code changes
+- Make a commit
+- Push the commit
+- Make a PR
 
-- **Backend** (`backend/`): Express.js server handling Spotify OAuth authentication
-  - `index.js`: Main server file with OAuth flow endpoints
-  - Uses ES modules (`"type": "module"` in package.json)
-  - Serves static frontend files
-  
-- **Frontend** (`frontend/`): Vanilla JavaScript client-side application  
-  - `index.html`: Main UI with player controls and canvas for visualization
-  - `main.js`: Spotify Web Playback SDK integration and UI event handlers
-  - `tokens.js`: OAuth token management and refresh logic
-  - `visualizer.js`: Audio visualization code (currently commented out/WIP)
-  - `color-thief.umd.js`: Third-party library for extracting colors from album artwork
+The PR will then be reviewed and either merged or changes will be requested.
 
-### Key Integration Points
+Please, don't ever merge a PR.
 
-- **Spotify OAuth Flow**: Backend handles authorization code flow, frontend uses Web Playback SDK
-- **Token Management**: Frontend automatically refreshes tokens every 30 minutes
-- **Player State**: Spotify Web Playback SDK manages playback state and track information
-- **Visual Effects**: Uses ColorThief to extract dominant colors from album artwork for background
+### Code style
 
-## Development Commands
-
-### Backend
-```bash
-cd backend
-npm start          # Start production server
-npm run dev        # Start development server with nodemon
-```
-
-### Frontend
-Frontend is served statically by the backend server - no separate build process required.
-
-## Environment Setup
-
-1. Copy `backend/.env-template` to `backend/.env`
-2. Fill in required Spotify credentials:
-   - `SPOTIFY_CLIENT_ID`: From Spotify Developer Dashboard
-   - `SPOTIFY_CLIENT_SECRET`: From Spotify Developer Dashboard  
-   - `API_BASE`: Base URL for backend API (e.g., http://localhost:3000)
-   - `PORT`: Port for backend server
-
-## Spotify Integration Details
-
-### Required Scopes
-The app requests these Spotify scopes (defined in `backend/index.js:17-30`):
-- `user-read-playback-state`
-- `app-remote-control` 
-- `user-modify-playback-state`
-- `playlist-read-private`
-- `playlist-read-collaborative`
-- `user-read-currently-playing`
-- `user-read-playback-position`
-- `streaming`
-- `user-read-private`
-- `user-library-read`
-- `user-read-email`
-- `user-read-recently-played`
-
-### Authentication Flow
-1. User clicks "Login to Spotify" → `/spotify/login`
-2. Backend redirects to Spotify authorization
-3. Spotify redirects back to `/spotify/login/callback` 
-4. Backend exchanges code for tokens, redirects to frontend with tokens in URL params
-5. Frontend extracts tokens, saves to localStorage, initializes Spotify Web Playback SDK
-
-### Player Control
-- Uses Spotify Web Playback SDK for playback control
-- Player automatically pauses on first state change (intentional behavior)
-- Frontend handles play/pause/skip/previous controls
-
-## Current State & Known Issues
-
-- Audio visualization code in `visualizer.js` is commented out and non-functional
-- No test framework or linting setup currently configured
-- No build process or bundling for frontend code
-- Uses third-party CDN resources (Font Awesome, Spotify SDK)
+- In writing code, simplicity and readability are key
+- Good variable naming is important
+  - Variables names should convey the underlying meaning of a variable, not just how its being used in the current context
+  - Use words for variable names, not single letters nor acronyms
+  - For booleans, always use 'is' or 'has' prefixes (or similar) (i.e.: isBlue, hasChildren)
+    - Setters for booleans should be the name of boolean prefixed by 'set' (i.e.: setIsBlue, setHasChildren)
+- Use functional programming styles and immutability when it makes the code cleaner
+- Prefer creating mutiple files with distinct purposes, rather than giant monolith files
+- Always feature-based file and folder organization for code. Minimal nesting of features
+  is preferred. Feature folders should be lower-cased. Here is an example:
+  - map/
+    - mapRendering.js
+    - mapLayers.js
+    - useMap.js
+    - Map/
+      - Map.jsx
+      - Map.module.css
+- React components files should always be structured as the following (folder with two files in it). Example:
+  - ComponentName/
+    - ComponentName.jsx
+    - ComponentName.module.css
+- In JS / TS, always use arrow functions
+- Use modern JS and TS features and latest best practices
+- In redux slices, don't export actions (instead refer to them like: mainSlice.actions.performaAction())
+- Don't modify the README.md
+- Use whitespace to separate logically connected sections of code
+  - If a block of code is unclear, add a comment above it
+- Format comments with a capital letter. No periods are needed unless multiple sentences
+  are written
+- In JS / TS, always us // for comments, don't use /\* \*/
+- In CSS, use "px" when possible
+- Minimal reliance on external dependencies is always preferred
+- In JS / TS, prefer ?? to || for defaulting operations
+- When adding permanent console statements, use console.info, console.warn, or console.error
+  - Reserve console.log for temporary debugging statements only
+- The guidelines from the "Zen of Python" are great:
+  - Beautiful is better than ugly.
+  - Explicit is better than implicit.
+  - Simple is better than complex.
+  - Complex is better than complicated.
+  - Flat is better than nested.
+  - Sparse is better than dense.
+  - Readability counts.
+  - Special cases aren't special enough to break the rules.
+  - Although practicality beats purity.
+  - Errors should never pass silently.
+  - Unless explicitly silenced.
+  - In the face of ambiguity, refuse the temptation to guess.
+  - There should be one-- and preferably only one --obvious way to do it.
+  - Although that way may not be obvious at first unless you're Dutch.
+  - Now is better than never.
+  - Although never is often better than _right_ now.
+  - If the implementation is hard to explain, it's a bad idea.
+  - If the implementation is easy to explain, it may be a good idea.

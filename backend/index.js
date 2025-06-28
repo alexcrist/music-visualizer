@@ -61,7 +61,7 @@ app.get("/spotify/login/callback", async (req, res) => {
       grant_type: "authorization_code",
     });
     res.redirect(
-      "http://localhost:5174/?" + querystring.stringify(tokenResponse)
+      "http://localhost:5173/?" + querystring.stringify(tokenResponse)
     );
   } else {
     res.sendStatus(400);
@@ -77,10 +77,10 @@ app.get("/spotify/login/refresh", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
+  console.info(`Backend running on port ${PORT}`);
 });
 
-const requestSpotifyToken = async (formData, method = "post") => {
+const requestSpotifyToken = async (formData) => {
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "post",
     body: new URLSearchParams(formData),
