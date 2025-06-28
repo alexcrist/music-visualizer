@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import mainSlice from "../mainSlice";
+import { config } from "../config/environment";
 
 const LOCAL_STORAGE_ACCESS_TOKEN = "ACCESS_TOKEN";
 const LOCAL_STORAGE_REFRESH_TOKEN = "REFRESH_TOKEN";
@@ -37,7 +38,7 @@ export const saveTokensToLocalStorage = (tokens) => {
 
 export const refreshTokens = async (refreshToken) => {
   const response = await fetch(
-    `http://localhost:3000/spotify/login/refresh?refresh_token=${refreshToken}`
+    `${config.apiBase}/spotify/login/refresh?refresh_token=${refreshToken}`
   );
   const data = await response.json();
   return {
