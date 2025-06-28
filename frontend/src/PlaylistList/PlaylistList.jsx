@@ -8,6 +8,7 @@ const PlaylistList = () => {
   const dispatch = useDispatch();
   const tokens = useSelector((state) => state.main.tokens);
   const playlists = useSelector((state) => state.main.playlists);
+  const deviceId = useSelector((state) => state.main.deviceId);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -30,7 +31,7 @@ const PlaylistList = () => {
   }, [tokens?.accessToken, dispatch]);
 
   const handlePlaylistClick = async (playlist) => {
-    if (!tokens?.accessToken) return;
+    if (!tokens?.accessToken || !deviceId) return;
 
     try {
       dispatch(mainSlice.actions.setSelectedPlaylist(playlist));
@@ -43,6 +44,7 @@ const PlaylistList = () => {
         },
         body: JSON.stringify({
           playlistUri: playlist.uri,
+          deviceId: deviceId,
         }),
       });
 

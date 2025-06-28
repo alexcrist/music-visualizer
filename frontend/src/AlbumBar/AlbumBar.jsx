@@ -21,6 +21,10 @@ const AlbumBar = () => {
 
   const albumImageUrl = currentTrack?.album?.images?.[2]?.url || "";
 
+  if (!albumImageUrl) {
+    return null;
+  }
+
   return (
     <div 
       className={styles.albumBar}
@@ -28,21 +32,14 @@ const AlbumBar = () => {
         backgroundColor: artworkColor || "#1a1a1a",
       }}
     >
-      {albumImageUrl && (
-        <img
-          ref={imgRef}
-          className={styles.albumArt}
-          src={albumImageUrl}
-          crossOrigin="anonymous"
-          onLoad={handleImageLoad}
-          alt="Album artwork"
-        />
-      )}
-      <div className={styles.albumInfo}>
-        <span className={styles.albumName}>
-          {currentTrack?.album?.name || "No album"}
-        </span>
-      </div>
+      <img
+        ref={imgRef}
+        className={styles.albumArt}
+        src={albumImageUrl}
+        crossOrigin="anonymous"
+        onLoad={handleImageLoad}
+        alt="Album artwork"
+      />
     </div>
   );
 };

@@ -105,13 +105,17 @@ app.post("/spotify/play", async (req, res) => {
     return res.status(401).json({ error: "Access token required" });
   }
 
-  const { playlistUri } = req.body;
+  const { playlistUri, deviceId } = req.body;
   if (!playlistUri) {
     return res.status(400).json({ error: "Playlist URI required" });
   }
 
   try {
-    const response = await fetch("https://api.spotify.com/v1/me/player/play", {
+    const url = deviceId 
+      ? `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`
+      : "https://api.spotify.com/v1/me/player/play";
+      
+    const response = await fetch(url, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
