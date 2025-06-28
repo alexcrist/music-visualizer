@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import mainSlice from "../mainSlice";
 import styles from "./OverflowMenu.module.css";
 
-const OverflowMenu = () => {
+const OverflowMenu = ({ contrastColor = "#ffffff" }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -41,6 +41,7 @@ const OverflowMenu = () => {
         className={styles.menuButton} 
         onClick={toggleMenu}
         aria-label="More options"
+        style={{ color: contrastColor }}
       >
         <FaEllipsisV size="16" />
       </button>
