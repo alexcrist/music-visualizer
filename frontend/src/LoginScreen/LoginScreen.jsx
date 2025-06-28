@@ -1,10 +1,11 @@
 import styles from "./LoginScreen.module.css";
+import { config } from "../config/environment";
 
 const LoginScreen = () => {
   return (
     <div className={styles.loginContainer}>
       <a
-        href="http://localhost:3000/spotify/login"
+        href={`${config.apiBase}/spotify/login`}
         className={styles.loginLink}
       >
         Login to Spotify
