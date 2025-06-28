@@ -17,6 +17,8 @@ The PR will then be reviewed and either merged or changes will be requested.
 
 Please, don't ever merge a PR.
 
+When creating PRs, a short description of the code changes is perfect, nothing more is needed.
+
 ### Code style
 
 - In writing code, simplicity and readability are key
