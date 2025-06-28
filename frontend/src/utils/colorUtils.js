@@ -38,17 +38,15 @@ const getLuminance = (r, g, b) => {
 
 export const getContrastColor = (backgroundColor) => {
   if (!backgroundColor) return "#ffffff";
-  
+
   const rgb = hexToRgb(backgroundColor);
   if (!rgb) return "#ffffff";
-  
+
   const luminance = getLuminance(rgb.r, rgb.g, rgb.b);
-  
-  // Return unsaturated colors based on luminance
-  // For dark backgrounds, use light grays; for light backgrounds, use dark grays
-  if (luminance > 0.5) {
-    return "#333333"; // Dark gray for light backgrounds
+
+  if (luminance > 0.4) {
+    return "#000000";
   } else {
-    return "#ffffff"; // White for dark backgrounds
+    return "#ffffff";
   }
 };
