@@ -1,15 +1,23 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background-color: black;
   padding: 0 24px;
   width: 100%;
+  gap: 40px;
 }
 
 .headerSection {
   display: flex;
   align-items: center;
+}
+
+.headerSection:first-child {
+  flex: 1;
+}
+
+.headerSection:last-child {
+  margin-left: auto;
 }
 
 .headerSection > * {
