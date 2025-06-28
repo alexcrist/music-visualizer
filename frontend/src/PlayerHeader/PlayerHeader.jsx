@@ -2,8 +2,14 @@ import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import OverflowMenu from "../OverflowMenu/OverflowMenu";
 import { getPlayer } from "../useInitSpotify";
-import { formatArtists } from "../utils/colorUtils";
 import styles from "./PlayerHeader.module.css";
+
+const formatArtists = (artists) => {
+  return artists
+    .map((artist) => artist.name)
+    .reduce((names, name) => names + ", " + name, "")
+    .substring(2);
+};
 
 const PlayerHeader = () => {
   const currentTrack = useSelector((state) => state.main.currentTrack);

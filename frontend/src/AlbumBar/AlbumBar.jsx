@@ -12,7 +12,7 @@ const AlbumBar = () => {
 
   const handleImageLoad = async () => {
     if (imgRef.current) {
-      const color = await extractDominantColor(imgRef.current);
+      const color = extractDominantColor(imgRef.current);
       if (color) {
         dispatch(mainSlice.actions.setArtworkColor(color));
       }
@@ -20,13 +20,12 @@ const AlbumBar = () => {
   };
 
   const albumImageUrl = currentTrack?.album?.images?.[2]?.url || "";
-
   if (!albumImageUrl) {
     return null;
   }
 
   return (
-    <div 
+    <div
       className={styles.albumBar}
       style={{
         backgroundColor: artworkColor || "#1a1a1a",

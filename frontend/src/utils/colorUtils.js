@@ -1,24 +1,18 @@
+import ColorThief from "colorthief";
+
 export const extractDominantColor = (imageElement) => {
-  return new Promise((resolve) => {
-    if (!window.ColorThief) {
-      resolve(null);
-      return;
-    }
-    
-    const colorThief = new window.ColorThief();
-    try {
-      const [r, g, b] = colorThief.getColor(imageElement);
-      resolve(`rgb(${r}, ${g}, ${b})`);
-    } catch (error) {
-      console.error('Failed to extract color:', error);
-      resolve(null);
-    }
-  });
+  const colorThief = new ColorThief();
+  const [r, g, b] = colorThief.getColor(imageElement);
+  const color = rgbToHex(r, g, b);
+  console.log("color", color);
+  return color;
 };
 
-export const formatArtists = (artists) => {
-  return artists 
-    .map((artist) => artist.name)
-    .reduce((names, name) => names + ', ' + name, '')
-    .substring(2);
-};
+const rgbToHex = (r, g, b) =>
+  "#" +
+  [r, g, b]
+    .map((x) => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
+    })
+    .join("");
