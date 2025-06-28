@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import AlbumBar from "../AlbumBar/AlbumBar";
 import LoginScreen from "../LoginScreen/LoginScreen";
 import PlayerHeader from "../PlayerHeader/PlayerHeader";
 import PlaylistList from "../PlaylistList/PlaylistList";
@@ -17,7 +16,6 @@ const App = () => {
   return (
     <div className={styles.container}>
       <PlayerHeader />
-      <AlbumBar />
       <PlaylistList />
     </div>
   );
