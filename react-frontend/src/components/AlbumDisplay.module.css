@@ -1,0 +1,24 @@
+.bodyContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 2000ms all;
+  width: 100%;
+}
+
+.albumArt {
+  padding: 0;
+  width: 640px;
+  height: 640px;
+  opacity: 0;
+  transition: 2000ms all;
+}
+
+.albumArt[src] {
+  opacity: 1;
+}
+
+.canvas {
+  display: none;
+}

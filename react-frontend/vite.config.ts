@@ -3,5 +3,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
     plugins: [react()],
-    base: "/react-redux-vite-scaffold/",
+    server: {
+        proxy: {
+            '/spotify': 'http://localhost:3000',
+        },
+    },
 });

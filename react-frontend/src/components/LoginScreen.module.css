@@ -1,0 +1,23 @@
+.loginContainer {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #000000;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.loginLink {
+  text-decoration: none;
+  color: #1DD05E;
+  font-size: 24px;
+  padding: 24px;
+}
+
+.loginLink:hover {
+  color: white;
+}

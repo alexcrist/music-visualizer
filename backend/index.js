@@ -13,7 +13,6 @@ dotenv.config();
 const { API_BASE, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, PORT } =
   process.env;
 const REDIRECT_URI = `${API_BASE}/spotify/login/callback`;
-console.log(REDIRECT_URI);
 const SPOTIFY_SCOPES = [
   "user-read-playback-state",
   "app-remote-control",
@@ -61,7 +60,9 @@ app.get("/spotify/login/callback", async (req, res) => {
       redirect_uri: REDIRECT_URI,
       grant_type: "authorization_code",
     });
-    res.redirect("/?" + querystring.stringify(tokenResponse));
+    res.redirect(
+      "http://localhost:5174/?" + querystring.stringify(tokenResponse)
+    );
   } else {
     res.sendStatus(400);
   }
