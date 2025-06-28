@@ -7,12 +7,12 @@ import path from "path";
 import querystring from "querystring";
 import url from "url";
 import { v4 as uuid } from "uuid";
+import { config } from "./config/environment.js";
 
 dotenv.config();
 
-const { API_BASE, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, PORT } =
-  process.env;
-const REDIRECT_URI = `${API_BASE}/spotify/login/callback`;
+const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } = process.env;
+const REDIRECT_URI = `${config.apiBase}/spotify/login/callback`;
 const SPOTIFY_SCOPES = [
   "user-read-playback-state",
   "app-remote-control",
@@ -61,7 +61,7 @@ app.get("/spotify/login/callback", async (req, res) => {
       grant_type: "authorization_code",
     });
     res.redirect(
-      "http://localhost:5173/?" + querystring.stringify(tokenResponse)
+      `${config.frontendUrl}/?` + querystring.stringify(tokenResponse)
     );
   } else {
     res.sendStatus(400);
@@ -76,8 +76,8 @@ app.get("/spotify/login/refresh", async (req, res) => {
   res.json(refreshResponse);
 });
 
-app.listen(PORT, () => {
-  console.info(`Backend running on port ${PORT}`);
+app.listen(config.port, () => {
+  console.info(`Backend running on port ${config.port}`);
 });
 
 const requestSpotifyToken = async (formData) => {
