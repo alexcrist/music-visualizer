@@ -1,5 +1,6 @@
 import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import OverflowMenu from "../OverflowMenu/OverflowMenu";
 import { getPlayer } from "../useInitSpotify";
 import { formatArtists } from "../utils/colorUtils";
 import styles from "./PlayerHeader.module.css";
@@ -66,6 +67,9 @@ const PlayerHeader = () => {
           />
         )}
         <FaForward className={styles.button} onClick={handleNext} size="22" />
+      </div>
+      <div className={styles.headerSection}>
+        <OverflowMenu />
       </div>
     </div>
   );
