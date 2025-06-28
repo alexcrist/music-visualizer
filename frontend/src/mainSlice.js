@@ -12,6 +12,7 @@ const mainSlice = createSlice({
     isPlayerReady: false,
     currentTrack: null,
     isPaused: true,
+    deviceId: null,
 
     // UI state
     artworkColor: null,
@@ -46,6 +47,9 @@ const mainSlice = createSlice({
     },
     setSelectedPlaylist: (state, action) => {
       state.selectedPlaylist = action.payload;
+    },
+    setDeviceId: (state, action) => {
+      state.deviceId = action.payload;
     },
   },
 });

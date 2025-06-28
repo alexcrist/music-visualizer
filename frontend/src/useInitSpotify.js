@@ -43,6 +43,7 @@ export const useInitSpotify = () => {
       spotifyPlayer.addListener("ready", ({ device_id }) => {
         console.info("Ready with Device ID", device_id);
         dispatch(mainSlice.actions.setIsPlayerReady(true));
+        dispatch(mainSlice.actions.setDeviceId(device_id));
         spotifyPlayer.getCurrentState();
       });
 

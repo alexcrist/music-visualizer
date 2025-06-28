@@ -15,17 +15,19 @@ const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } = process.env;
 const REDIRECT_URI = `${config.apiBase}/spotify/login/callback`;
 const SPOTIFY_SCOPES = [
   "user-read-playback-state",
-  "app-remote-control",
   "user-modify-playback-state",
+  "user-read-currently-playing",
+
+  "app-remote-control",
+  "streaming",
+
   "playlist-read-private",
   "playlist-read-collaborative",
-  "user-read-currently-playing",
+
   "user-read-playback-position",
-  "streaming",
-  "user-read-private",
-  "user-library-read",
-  "user-read-email",
   "user-read-recently-played",
+
+  "user-library-read",
 ];
 const SPOTIFY_STATE_KEY = "SPOTIFY_AUTH_STATE";
 
@@ -103,13 +105,17 @@ app.post("/spotify/play", async (req, res) => {
     return res.status(401).json({ error: "Access token required" });
   }
 
-  const { playlistUri } = req.body;
+  const { playlistUri, deviceId } = req.body;
   if (!playlistUri) {
     return res.status(400).json({ error: "Playlist URI required" });
   }
 
   try {
-    const response = await fetch("https://api.spotify.com/v1/me/player/play", {
+    const url = deviceId 
+      ? `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`
+      : "https://api.spotify.com/v1/me/player/play";
+      
+    const response = await fetch(url, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,

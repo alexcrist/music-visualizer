@@ -2,17 +2,19 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background: #fff;
+  min-height: calc(100vh - 140px);
 }
 
 .title {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 20px;
-  color: #fff;
+  color: #000;
 }
 
 .noPlaylists {
-  color: #b3b3b3;
+  color: #666;
   font-size: 16px;
   text-align: center;
   margin-top: 40px;
@@ -25,15 +27,12 @@
 }
 
 .playlistCard {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
   padding: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .playlistCard:hover {
-  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
@@ -46,7 +45,7 @@
 }
 
 .playlistInfo {
-  color: #fff;
+  color: #000;
 }
 
 .playlistName {
@@ -60,6 +59,6 @@
 
 .playlistTracks {
   font-size: 14px;
-  color: #b3b3b3;
+  color: #666;
   margin: 0;
 }
