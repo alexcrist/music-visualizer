@@ -34,13 +34,16 @@ const App = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Music Visualizer</h1>
+      <h1 className={styles.title}>Music Visualizer</h1>
 
       <Card>
-        <AudioCapture
-          onAudioData={handleAudioData}
-          onAudioStream={handleAudioStream}
-        />
+        <h3 className={styles.subtitle}>Audio Devices</h3>
+        <div className={styles.lineItem}>
+          <AudioCapture
+            onAudioData={handleAudioData}
+            onAudioStream={handleAudioStream}
+          />
+        </div>
         <AudioOutput
           audioContext={audioStream?.audioContext}
           sourceNode={audioStream?.source}
@@ -48,9 +51,27 @@ const App = () => {
         />
       </Card>
 
+      {/* Audio Configuration Info */}
+      {audioData && (
+        <Card>
+          <h3 className={styles.subtitle}>Audio Configuration</h3>
+          <div>
+            <p className={styles.lineItem}>
+              Sample Rate: {audioData.sampleRate} Hz
+            </p>
+            <p className={styles.lineItem}>
+              Buffer Length: {audioData.bufferLength}
+            </p>
+            <p className={styles.lineItem}>
+              Delay: {Math.round(delaySeconds * 1000)} ms
+            </p>
+          </div>
+        </Card>
+      )}
+
       {/* Visualizer */}
       <Card>
-        <h3>Volume Visualizer</h3>
+        <h3 className={styles.subtitle}>Volume Visualizer</h3>
         <Visualizer
           features={audioFeatures}
           drawFunction={drawVolumeVisualizer}
@@ -62,16 +83,6 @@ const App = () => {
           height={300}
         />
       </Card>
-
-      {/* Audio Configuration Info */}
-      {audioData && (
-        <Card>
-          <h4>Audio Configuration:</h4>
-          <p>Sample Rate: {audioData.sampleRate} Hz</p>
-          <p>Buffer Length: {audioData.bufferLength}</p>
-          <p>Delay: {Math.round(delaySeconds * 1000)} ms</p>
-        </Card>
-      )}
     </div>
   );
 };
