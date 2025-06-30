@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import Card from "../Card/Card";
 import AudioCapture from "../audio/AudioCapture/AudioCapture";
 import AudioOutput from "../audio/AudioOutput/AudioOutput";
 import { processAudioData } from "../audio/extractAudioFeatures";
@@ -34,19 +35,21 @@ const App = () => {
   return (
     <div className={styles.container}>
       <h1>Music Visualizer</h1>
-      <AudioCapture
-        onAudioData={handleAudioData}
-        onAudioStream={handleAudioStream}
-      />
 
-      <AudioOutput
-        audioContext={audioStream?.audioContext}
-        sourceNode={audioStream?.source}
-        delaySeconds={delaySeconds}
-      />
+      <Card>
+        <AudioCapture
+          onAudioData={handleAudioData}
+          onAudioStream={handleAudioStream}
+        />
+        <AudioOutput
+          audioContext={audioStream?.audioContext}
+          sourceNode={audioStream?.source}
+          delaySeconds={delaySeconds}
+        />
+      </Card>
 
       {/* Visualizer */}
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
+      <Card>
         <h3>Volume Visualizer</h3>
         <Visualizer
           features={audioFeatures}
@@ -58,16 +61,16 @@ const App = () => {
           width={400}
           height={300}
         />
-      </div>
+      </Card>
 
       {/* Audio Configuration Info */}
       {audioData && (
-        <div style={{ marginTop: "20px", fontSize: "14px", color: "#333" }}>
+        <Card>
           <h4>Audio Configuration:</h4>
           <p>Sample Rate: {audioData.sampleRate} Hz</p>
           <p>Buffer Length: {audioData.bufferLength}</p>
           <p>Delay: {Math.round(delaySeconds * 1000)} ms</p>
-        </div>
+        </Card>
       )}
     </div>
   );

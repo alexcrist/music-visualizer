@@ -170,11 +170,8 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
   }, [startForwarding, stopForwarding]);
 
   return (
-    <div
-      style={{ padding: "10px", border: "1px solid #ccc", marginTop: "10px" }}
-    >
-      <h4>Audio Output</h4>
-      <div style={{ marginBottom: "10px" }}>
+    <div>
+      <div>
         <label>Output Device: </label>
         <select value={selectedDevice} onChange={handleOutputDeviceChange}>
           <option value="">System Default</option>

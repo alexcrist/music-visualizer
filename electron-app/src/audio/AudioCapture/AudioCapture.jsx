@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const AudioCapture = ({ onAudioData, onAudioStream }) => {
-  const [isCapturing, setIsCapturing] = useState(false);
   const [devices, setDevices] = useState([]);
   const [selectedDevice, setSelectedDevice] = useState("");
   const audioContextRef = useRef(null);
@@ -86,7 +85,6 @@ const AudioCapture = ({ onAudioData, onAudioStream }) => {
         });
       }
 
-      setIsCapturing(true);
       processAudio();
     } catch (error) {
       console.error("Error starting audio capture:", error);
@@ -110,8 +108,6 @@ const AudioCapture = ({ onAudioData, onAudioStream }) => {
     if (onAudioStream) {
       onAudioStream(null);
     }
-
-    setIsCapturing(false);
   }, [onAudioStream]);
 
   useEffect(() => {
@@ -126,11 +122,10 @@ const AudioCapture = ({ onAudioData, onAudioStream }) => {
   return (
     <div>
       <div>
-        <label>Audio Device (BlackHole for system audio): </label>
+        <label>Capture Device (BlackHole): </label>
         <select
           value={selectedDevice}
           onChange={(e) => setSelectedDevice(e.target.value)}
-          disabled={isCapturing}
         >
           <option value="">Default</option>
           {devices.map((device) => (
@@ -140,8 +135,6 @@ const AudioCapture = ({ onAudioData, onAudioStream }) => {
           ))}
         </select>
       </div>
-
-      {isCapturing && <div>🎵 Capturing audio...</div>}
     </div>
   );
 };
