@@ -4,8 +4,7 @@ import styles from "./Visualizer.module.css";
 
 const Visualizer = ({
   features,
-  drawFunction,
-  drawOptions = {},
+  visualizer,
   width = 400,
   height = 300,
   className = "",
@@ -25,8 +24,8 @@ const Visualizer = ({
 
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    drawFunction(ctx, features, canvas, drawOptions);
-  }, [drawFunction, drawOptions, features, height, width, isFullscreen]);
+    visualizer.draw(ctx, features, canvas);
+  }, [isFullscreen, width, height, visualizer, features]);
 
   const toggleFullscreen = useCallback(async () => {
     setIsFullscreen(!isFullscreen);
@@ -35,6 +34,13 @@ const Visualizer = ({
   useEffect(() => {
     animate();
   }, [animate]);
+
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.classList.add(styles.body);
+      return () => document.body.classList.remove(styles.body);
+    }
+  }, [isFullscreen]);
 
   useEffect(() => {
     const onKeyDown = (event) => {

@@ -3,9 +3,14 @@ import Card from "../Card/Card";
 import AudioCapture from "../audio/AudioCapture/AudioCapture";
 import AudioOutput from "../audio/AudioOutput/AudioOutput";
 import { processAudioData } from "../audio/extractAudioFeatures";
+import { FrequencyVisualizer } from "../visualizers/FrequencyVisualizer";
 import Visualizer from "../visualizers/Visualizer/Visualizer";
-import { drawVolumeVisualizer } from "../visualizers/drawVolumeVisualizer";
 import styles from "./App.module.css";
+
+const freqVisualizer = new FrequencyVisualizer({
+  color: "#ff6b6b",
+  backgroundColor: "#000",
+});
 
 const App = () => {
   const [delaySeconds, setDelaySeconds] = useState(0);
@@ -69,17 +74,14 @@ const App = () => {
         </Card>
       )}
 
-      {/* Visualizer */}
+      {/* Frequency Visualizer */}
       <Card>
-        <h3 className={styles.subtitle}>Volume Visualizer</h3>
+        <h3 className={styles.subtitle}>Frequency Spectrum</h3>
         <Visualizer
           features={audioFeatures}
-          drawFunction={drawVolumeVisualizer}
-          drawOptions={{
-            color: "#00ff88",
-            backgroundColor: "#000",
-          }}
-          size="medium"
+          visualizer={freqVisualizer}
+          width={600}
+          height={200}
         />
       </Card>
     </div>
