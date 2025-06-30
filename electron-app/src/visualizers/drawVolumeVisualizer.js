@@ -8,7 +8,9 @@ export const drawVolumeVisualizer = (ctx, features, canvas, options = {}) => {
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (!features || !features.current) {
+  console.log("features", features);
+
+  if (!features) {
     // Draw placeholder when no audio
     ctx.fillStyle = "#333";
     ctx.fillRect(canvas.width / 2 - 50, canvas.height - 20, 100, 20);
@@ -20,7 +22,7 @@ export const drawVolumeVisualizer = (ctx, features, canvas, options = {}) => {
     return;
   }
 
-  const volume = features.current.volume || 0;
+  const volume = features.volume || 0;
 
   // Calculate rectangle dimensions
   const rectWidth = Math.min(canvas.width * 0.8, 200);

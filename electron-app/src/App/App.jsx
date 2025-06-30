@@ -1,22 +1,19 @@
 import { useState } from "react";
 import AudioCapture from "../audio/AudioCapture/AudioCapture";
-import useAudioProcessor from "../audio/useAudioProcessor";
+import { processAudioData } from "../audio/extractAudioFeatures";
 import Visualizer from "../visualizers/Visualizer/Visualizer";
 import { drawVolumeVisualizer } from "../visualizers/drawVolumeVisualizer";
 import styles from "./App.module.css";
 
 const App = () => {
   const [audioData, setAudioData] = useState(null);
+  const [audioFeatures, setAudioFeatures] = useState(null);
 
-  const handleAudioData = (data) => {
-    setAudioData(data);
+  const handleAudioData = (audioData) => {
+    setAudioData(audioData);
+    const features = processAudioData(audioData);
+    setAudioFeatures(features);
   };
-
-  // Use the audio processor hook
-  const audioFeatures = useAudioProcessor(audioData, {
-    bufferCount: 10,
-    overlapRatio: 0.5,
-  });
 
   return (
     <div className={styles.container}>
@@ -38,6 +35,19 @@ const App = () => {
         />
       </div>
 
+      {/* Audio Configuration Info */}
+      {audioData && (
+        <div style={{ marginTop: "20px", fontSize: "14px", color: "#333" }}>
+          <h4>Audio Configuration:</h4>
+          <p>Sample Rate: {audioData.sampleRate} Hz</p>
+          <p>Buffer Length: {audioData.bufferLength}</p>
+          <p>
+            First 10 Frequency Values:{" "}
+            {audioData.frequencyData.slice(0, 10).join(", ")}
+          </p>
+        </div>
+      )}
+
       {/* Debug Info */}
       {audioFeatures && (
         <div style={{ marginTop: "20px", fontSize: "12px", color: "#666" }}>
@@ -45,11 +55,6 @@ const App = () => {
           <p>
             Current Volume:{" "}
             {Math.round((audioFeatures.current?.volume || 0) * 100)}%
-          </p>
-          <p>History Length: {audioFeatures.history?.length || 0}</p>
-          <p>
-            Buffer Count: {audioFeatures.bufferInfo?.totalBuffers || 0}/
-            {audioFeatures.bufferInfo?.maxBuffers || 0}
           </p>
         </div>
       )}
