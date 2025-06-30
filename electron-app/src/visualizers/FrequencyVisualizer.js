@@ -1,4 +1,11 @@
+import chroma from "chroma-js";
+import _ from "lodash";
 import { BaseVisualizer } from "./BaseVisualizer";
+
+const LOW_COLOR = "#5630FF";
+const HIGH_COLOR = "#59C9FF";
+const COLOR_SCALE = chroma.scale([LOW_COLOR, HIGH_COLOR]);
+const VOLUME_WINDOW_SECONDS = 10;
 
 export class FrequencyVisualizer extends BaseVisualizer {
   constructor(options) {
@@ -6,8 +13,8 @@ export class FrequencyVisualizer extends BaseVisualizer {
     this.volumeHistory = [];
   }
 
-  draw(ctx, features, canvas) {
-    const { baseColor = "#7658FF", backgroundColor = "#000" } = this.options;
+  draw(ctx, features, canvas, sampleRate, bufferLength) {
+    const { backgroundColor = "#000" } = this.options;
 
     // Canvas dimensions for responsive calculations
     const { width: canvasWidth, height: canvasHeight } = canvas;
@@ -17,7 +24,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    if (!features || !features.frequencyData) {
+    if (!features || !features.frequencyData || !sampleRate || !bufferLength) {
       // Draw placeholder when no audio
       ctx.fillStyle = "#666";
       ctx.font = `${Math.max(canvasHeight * 0.06, 14)}px Arial`;
@@ -26,7 +33,23 @@ export class FrequencyVisualizer extends BaseVisualizer {
       return;
     }
 
-    const frequencyData = features.frequencyData;
+    // Calculate color based on volume compared to average volume
+    const { volume, frequencyData } = features;
+    const avgVolume = _.mean(this.volumeHistory) ?? 0;
+    let colorPercent = volume / avgVolume - 1;
+    colorPercent = Math.max(0, colorPercent);
+    colorPercent = Math.min(1, colorPercent);
+    const color = COLOR_SCALE(colorPercent).hex();
+
+    // Update volume history
+    const bufferLengthSeconds = bufferLength / sampleRate;
+    const volumeHistoryMaxLength = parseInt(
+      VOLUME_WINDOW_SECONDS / bufferLengthSeconds
+    );
+    if (this.volumeHistory === volumeHistoryMaxLength) {
+      this.volumeHistory.shift();
+    }
+    this.volumeHistory.push(volume);
 
     // Focus on musical frequency range (roughly 20Hz - 20kHz)
     const musicalRangeEnd = Math.floor(frequencyData.length * 0.6);
@@ -56,8 +79,8 @@ export class FrequencyVisualizer extends BaseVisualizer {
 
       // Create gradient for each bar
       const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
-      gradient.addColorStop(0, baseColor);
-      gradient.addColorStop(1, baseColor + "44");
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(1, color + "44");
 
       // Draw bar
       ctx.fillStyle = gradient;
@@ -65,7 +88,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
 
       // Draw subtle bar outline only if bars are wide enough
       if (barWidth > 3) {
-        ctx.strokeStyle = baseColor;
+        ctx.strokeStyle = color;
         ctx.lineWidth = Math.max(canvasWidth * 0.0005, 0.5);
         ctx.strokeRect(x, y, barWidth, barHeight);
       }

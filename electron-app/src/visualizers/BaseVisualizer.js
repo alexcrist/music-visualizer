@@ -3,7 +3,7 @@ export class BaseVisualizer {
     this.options = options;
   }
 
-  draw(ctx, features, canvas) {
+  draw() {
     throw Error("Implement in child class.");
   }
 }

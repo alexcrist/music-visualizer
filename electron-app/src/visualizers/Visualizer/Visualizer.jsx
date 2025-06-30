@@ -5,6 +5,8 @@ import styles from "./Visualizer.module.css";
 const Visualizer = ({
   features,
   visualizer,
+  sampleRate,
+  bufferLength,
   width = 400,
   height = 300,
   className = "",
@@ -24,8 +26,16 @@ const Visualizer = ({
 
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    visualizer.draw(ctx, features, canvas);
-  }, [isFullscreen, width, height, visualizer, features]);
+    visualizer.draw(ctx, features, canvas, sampleRate, bufferLength);
+  }, [
+    isFullscreen,
+    width,
+    height,
+    visualizer,
+    features,
+    sampleRate,
+    bufferLength,
+  ]);
 
   const toggleFullscreen = useCallback(async () => {
     setIsFullscreen(!isFullscreen);

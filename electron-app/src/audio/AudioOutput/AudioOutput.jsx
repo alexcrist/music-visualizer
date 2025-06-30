@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// Humans process audio faster than visuals
-const HUMAN_VISUAL_DELAY_SECONDS = 0.012;
+const VISUAL_DELAY_SECONDS = 0.0;
 
 const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
   const [isForwarding, setIsForwarding] = useState(false);
@@ -58,7 +57,7 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
 
       // Create audio nodes
       const delayNode = audioContext.createDelay();
-      delayNode.delayTime.value = delaySeconds + HUMAN_VISUAL_DELAY_SECONDS;
+      delayNode.delayTime.value = delaySeconds + VISUAL_DELAY_SECONDS;
 
       // Create a destination that we can control the output device for
       const destination = audioContext.createMediaStreamDestination();
@@ -104,7 +103,7 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
     if (!delayNode) {
       return;
     }
-    delayNode.delayTime.value = delaySeconds + HUMAN_VISUAL_DELAY_SECONDS;
+    delayNode.delayTime.value = delaySeconds + VISUAL_DELAY_SECONDS;
   }, [delaySeconds]);
 
   const stopForwarding = useCallback(() => {

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import Card from "../Card/Card";
 import AudioCapture from "../audio/AudioCapture/AudioCapture";
 import AudioOutput from "../audio/AudioOutput/AudioOutput";
-import { processAudioData } from "../audio/extractAudioFeatures";
+import { processAudioData } from "../audio/processAudioData";
 import { FrequencyVisualizer } from "../visualizers/FrequencyVisualizer";
 import Visualizer from "../visualizers/Visualizer/Visualizer";
 import styles from "./App.module.css";
@@ -80,6 +80,8 @@ const App = () => {
         <Visualizer
           features={audioFeatures}
           visualizer={freqVisualizer}
+          sampleRate={audioData?.sampleRate}
+          bufferLength={audioData?.bufferLength}
           width={600}
           height={200}
         />
