@@ -19,7 +19,7 @@ const App = () => {
       const bufferLength = audioData?.bufferLength;
       const newDelaySeconds = bufferLength / sampleRate;
       if (delaySeconds !== newDelaySeconds) {
-        setDelaySeconds(delaySeconds);
+        setDelaySeconds(newDelaySeconds);
       }
       const features = processAudioData(audioData);
       setAudioFeatures(features);
@@ -66,10 +66,7 @@ const App = () => {
           <h4>Audio Configuration:</h4>
           <p>Sample Rate: {audioData.sampleRate} Hz</p>
           <p>Buffer Length: {audioData.bufferLength}</p>
-          <p>
-            First 10 Frequency Values:{" "}
-            {audioData.frequencyData.slice(0, 10).join(", ")}
-          </p>
+          <p>Delay: {Math.round(delaySeconds * 1000)} ms</p>
         </div>
       )}
     </div>

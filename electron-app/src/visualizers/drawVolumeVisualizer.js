@@ -20,7 +20,7 @@ export const drawVolumeVisualizer = (ctx, features, canvas, options = {}) => {
     return;
   }
 
-  const volume = features.volume || 0;
+  const volume = features.volume ? Math.sqrt(features.volume) : 0;
 
   // Calculate rectangle dimensions
   const rectWidth = Math.min(canvas.width * 0.8, 200);

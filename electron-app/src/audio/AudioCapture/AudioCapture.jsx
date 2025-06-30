@@ -119,7 +119,6 @@ const AudioCapture = ({ onAudioData, onAudioStream }) => {
   }, []);
 
   useEffect(() => {
-    console.log("uh oh");
     startCapture();
     return () => stopCapture();
   }, [startCapture, stopCapture]);
