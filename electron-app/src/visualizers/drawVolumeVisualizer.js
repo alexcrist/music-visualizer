@@ -8,8 +8,6 @@ export const drawVolumeVisualizer = (ctx, features, canvas, options = {}) => {
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  console.log("features", features);
-
   if (!features) {
     // Draw placeholder when no audio
     ctx.fillStyle = "#333";

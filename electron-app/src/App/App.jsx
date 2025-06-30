@@ -1,24 +1,49 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import AudioCapture from "../audio/AudioCapture/AudioCapture";
+import AudioOutput from "../audio/AudioOutput/AudioOutput";
 import { processAudioData } from "../audio/extractAudioFeatures";
 import Visualizer from "../visualizers/Visualizer/Visualizer";
 import { drawVolumeVisualizer } from "../visualizers/drawVolumeVisualizer";
 import styles from "./App.module.css";
 
 const App = () => {
+  const [delaySeconds, setDelaySeconds] = useState(0);
   const [audioData, setAudioData] = useState(null);
   const [audioFeatures, setAudioFeatures] = useState(null);
+  const [audioStream, setAudioStream] = useState(null);
 
-  const handleAudioData = (audioData) => {
-    setAudioData(audioData);
-    const features = processAudioData(audioData);
-    setAudioFeatures(features);
-  };
+  const handleAudioData = useCallback(
+    (audioData) => {
+      setAudioData(audioData);
+      const sampleRate = audioData?.sampleRate;
+      const bufferLength = audioData?.bufferLength;
+      const newDelaySeconds = bufferLength / sampleRate;
+      if (delaySeconds !== newDelaySeconds) {
+        setDelaySeconds(delaySeconds);
+      }
+      const features = processAudioData(audioData);
+      setAudioFeatures(features);
+    },
+    [delaySeconds]
+  );
+
+  const handleAudioStream = useCallback((streamInfo) => {
+    setAudioStream(streamInfo);
+  }, []);
 
   return (
     <div className={styles.container}>
       <h1>Music Visualizer</h1>
-      <AudioCapture onAudioData={handleAudioData} />
+      <AudioCapture
+        onAudioData={handleAudioData}
+        onAudioStream={handleAudioStream}
+      />
+
+      <AudioOutput
+        audioContext={audioStream?.audioContext}
+        sourceNode={audioStream?.source}
+        delaySeconds={delaySeconds}
+      />
 
       {/* Visualizer */}
       <div style={{ marginTop: "20px", textAlign: "center" }}>
@@ -44,17 +69,6 @@ const App = () => {
           <p>
             First 10 Frequency Values:{" "}
             {audioData.frequencyData.slice(0, 10).join(", ")}
-          </p>
-        </div>
-      )}
-
-      {/* Debug Info */}
-      {audioFeatures && (
-        <div style={{ marginTop: "20px", fontSize: "12px", color: "#666" }}>
-          <h4>Debug Info:</h4>
-          <p>
-            Current Volume:{" "}
-            {Math.round((audioFeatures.current?.volume || 0) * 100)}%
           </p>
         </div>
       )}
