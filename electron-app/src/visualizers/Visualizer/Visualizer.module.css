@@ -1,0 +1,47 @@
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.containerFullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  z-index: 9999;
+}
+
+.canvas {
+  border: 1px solid #ccc;
+  background-color: #000;
+  display: block;
+}
+
+.canvasFullscreen {
+  border: none;
+  background-color: #000;
+  display: block;
+}
+
+.fullscreenButton {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  padding: 7px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreenButton:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}

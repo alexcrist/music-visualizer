@@ -79,8 +79,7 @@ const App = () => {
             color: "#00ff88",
             backgroundColor: "#000",
           }}
-          width={400}
-          height={300}
+          size="medium"
         />
       </Card>
     </div>

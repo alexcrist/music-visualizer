@@ -90,7 +90,6 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
       audioElementRef.current = audioElement;
 
       setIsForwarding(true);
-      console.info("Audio forwarding started");
     } catch (error) {
       console.error("Error starting audio forwarding:", error);
     }
@@ -131,7 +130,6 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
       destinationRef.current = null;
 
       setIsForwarding(false);
-      console.info("Audio forwarding stopped");
     } catch (error) {
       console.error("Error stopping audio forwarding:", error);
       // Force reset state even if cleanup fails
