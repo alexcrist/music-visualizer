@@ -2,8 +2,8 @@ import chroma from "chroma-js";
 import _ from "lodash";
 import { BaseVisualizer } from "./BaseVisualizer";
 
-const LOW_COLOR = "#5630FF";
-const HIGH_COLOR = "#59C9FF";
+const LOW_COLOR = "#FF5381";
+const HIGH_COLOR = "#FF084A";
 const COLOR_SCALE = chroma.scale([LOW_COLOR, HIGH_COLOR]).mode("hsl");
 const VOLUME_WINDOW_SECONDS = 10;
 const MAX_FREQUENCY_BARS = 150;
@@ -79,8 +79,11 @@ export class FrequencyVisualizer extends BaseVisualizer {
     this.updateBarAmplitudeHistory(melScaledData, volumeHistoryMaxLength);
     const barColors = this.calculateBarColors(melScaledData);
 
+    // Calculate smoothed amplitudes for less jerky visualization
+    const smoothedAmplitudes = this.calculateSmoothedAmplitudes(melScaledData);
+
     // Draw bars in all four quadrants
-    this.drawQuadrantBars(ctx, melScaledData, barColors, backgroundColor, {
+    this.drawQuadrantBars(ctx, smoothedAmplitudes, barColors, backgroundColor, {
       centerX,
       centerY,
       quadrantHeight,
@@ -130,6 +133,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
       const baseY = centerY - barHeight;
 
       // Create gradients for top and bottom bars
+      const darkColor = chroma(color).darken(3).hex();
       const topGradient = ctx.createLinearGradient(
         0,
         baseY,
@@ -137,7 +141,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
         baseY + barHeight
       );
       topGradient.addColorStop(0, color);
-      topGradient.addColorStop(1, color + "66");
+      topGradient.addColorStop(1, darkColor);
 
       const bottomY = centerY;
       const bottomGradient = ctx.createLinearGradient(
@@ -146,7 +150,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
         0,
         bottomY + barHeight
       );
-      bottomGradient.addColorStop(0, color + "66");
+      bottomGradient.addColorStop(0, darkColor);
       bottomGradient.addColorStop(1, color);
 
       const leftX = centerX - i * barWidth - barWidth;
@@ -270,5 +274,26 @@ export class FrequencyVisualizer extends BaseVisualizer {
     }
 
     return colors;
+  }
+
+  calculateSmoothedAmplitudes(currentAmplitudes) {
+    const smoothedAmplitudes = [];
+
+    for (let i = 0; i < currentAmplitudes.length; i++) {
+      const currentAmplitude = currentAmplitudes[i];
+      const barHistory = this.barAmplitudeHistory[i] || [];
+
+      // Get previous amplitude (second to last in history)
+      const previousAmplitude =
+        barHistory.length >= 2
+          ? barHistory[barHistory.length - 2]
+          : currentAmplitude;
+
+      // Average current and previous amplitude for smoothing
+      const smoothedAmplitude = (currentAmplitude + previousAmplitude) / 2;
+      smoothedAmplitudes.push(smoothedAmplitude);
+    }
+
+    return smoothedAmplitudes;
   }
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const VISUAL_DELAY_SECONDS = 0.0;
+const DELAY_MULTIPLIER = 2;
 
 const DEFAULT_DEVICES = ["external headphones", "linkbuds"];
 
@@ -64,7 +65,8 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
 
       // Create audio nodes
       const delayNode = audioContext.createDelay();
-      delayNode.delayTime.value = delaySeconds + VISUAL_DELAY_SECONDS;
+      delayNode.delayTime.value =
+        delaySeconds * DELAY_MULTIPLIER + VISUAL_DELAY_SECONDS;
 
       // Create a destination that we can control the output device for
       const destination = audioContext.createMediaStreamDestination();
@@ -110,7 +112,8 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
     if (!delayNode) {
       return;
     }
-    delayNode.delayTime.value = delaySeconds + VISUAL_DELAY_SECONDS;
+    delayNode.delayTime.value =
+      delaySeconds * DELAY_MULTIPLIER + VISUAL_DELAY_SECONDS;
   }, [delaySeconds]);
 
   const stopForwarding = useCallback(() => {
