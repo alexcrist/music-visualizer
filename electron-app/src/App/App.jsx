@@ -4,10 +4,16 @@ import AudioCapture from "../audio/AudioCapture/AudioCapture";
 import AudioOutput from "../audio/AudioOutput/AudioOutput";
 import { processAudioData } from "../audio/processAudioData";
 import { FrequencyVisualizer } from "../visualizers/FrequencyVisualizer";
+import { ThreeJSFrequencyVisualizer } from "../visualizers/ThreeJSFrequencyVisualizer";
 import Visualizer from "../visualizers/Visualizer/Visualizer";
 import styles from "./App.module.css";
 
 const freqVisualizer = new FrequencyVisualizer({
+  color: "#ff6b6b",
+  backgroundColor: "#000",
+});
+
+const threeJSVisualizer = new ThreeJSFrequencyVisualizer({
   color: "#ff6b6b",
   backgroundColor: "#000",
 });
@@ -84,6 +90,19 @@ const App = () => {
           bufferLength={audioData?.bufferLength}
           width={600}
           height={200}
+        />
+      </Card>
+
+      {/* 3D Frequency Visualizer */}
+      <Card>
+        <h3 className={styles.subtitle}>3D Frequency Spectrum</h3>
+        <Visualizer
+          features={audioFeatures}
+          visualizer={threeJSVisualizer}
+          sampleRate={audioData?.sampleRate}
+          bufferLength={audioData?.bufferLength}
+          width={600}
+          height={400}
         />
       </Card>
     </div>
