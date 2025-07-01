@@ -6,7 +6,7 @@ const LOW_COLOR = "#5630FF";
 const HIGH_COLOR = "#59C9FF";
 const COLOR_SCALE = chroma.scale([LOW_COLOR, HIGH_COLOR]);
 const VOLUME_WINDOW_SECONDS = 10;
-const MAX_FREQUENCY_BARS = 100;
+const MAX_FREQUENCY_BARS = 150;
 
 export class FrequencyVisualizer extends BaseVisualizer {
   constructor(options) {
@@ -53,7 +53,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
     this.volumeHistory.push(volume);
 
     // Focus on musical frequency range (roughly 20Hz - 20kHz)
-    const musicalRangeEnd = Math.floor(frequencyData.length * 0.6);
+    const musicalRangeEnd = Math.floor(frequencyData.length * 1);
     const musicalFreqData = frequencyData.slice(0, musicalRangeEnd);
 
     // Calculate dimensions for symmetrical quadrants
@@ -73,11 +73,15 @@ export class FrequencyVisualizer extends BaseVisualizer {
     const barWidth = quadrantWidth / barCount;
     const maxBarHeight = quadrantHeight * 0.9;
 
-    // Resample frequency data to match bar count using averaging
-    const resampledData = this.resampleFrequencyData(musicalFreqData, barCount);
+    // Convert frequency data using Mel scale for perceptually uniform distribution
+    const melScaledData = this.convertToMelScale(
+      musicalFreqData,
+      sampleRate,
+      barCount
+    );
 
     // Draw bars in all four quadrants
-    this.drawQuadrantBars(ctx, resampledData, color, backgroundColor, {
+    this.drawQuadrantBars(ctx, melScaledData, color, backgroundColor, {
       centerX,
       centerY,
       quadrantHeight,
@@ -172,5 +176,53 @@ export class FrequencyVisualizer extends BaseVisualizer {
         ctx.strokeRect(leftX, bottomY, barWidth, barHeight);
       }
     }
+  }
+
+  frequencyToMel(frequency) {
+    return 2595 * Math.log10(1 + frequency / 700);
+  }
+
+  melToFrequency(mel) {
+    return 700 * (Math.pow(10, mel / 2595) - 1);
+  }
+
+  convertToMelScale(frequencyData, sampleRate, targetLength) {
+    const nyquistFreq = sampleRate / 2;
+    const freqPerBin = nyquistFreq / frequencyData.length;
+
+    // Calculate mel scale range
+    const minFreq = 20; // Hz
+    const maxFreq = Math.min(nyquistFreq, 20000); // Hz, capped at 20kHz
+    const minMel = this.frequencyToMel(minFreq);
+    const maxMel = this.frequencyToMel(maxFreq);
+
+    // Create mel-spaced frequency bins
+    const melScaledData = [];
+    const melStep = (maxMel - minMel) / targetLength;
+
+    for (let i = 0; i < targetLength; i++) {
+      const currentMel = minMel + i * melStep;
+      const nextMel = minMel + (i + 1) * melStep;
+
+      const currentFreq = this.melToFrequency(currentMel);
+      const nextFreq = this.melToFrequency(nextMel);
+
+      // Find corresponding bins in original frequency data
+      const startBin = Math.floor(currentFreq / freqPerBin);
+      const endBin = Math.ceil(nextFreq / freqPerBin);
+
+      // Average the amplitudes in this mel bin
+      let sum = 0;
+      let count = 0;
+
+      for (let j = startBin; j < endBin && j < frequencyData.length; j++) {
+        sum += frequencyData[j];
+        count++;
+      }
+
+      melScaledData[i] = count > 0 ? sum / count : 0;
+    }
+
+    return melScaledData;
   }
 }
