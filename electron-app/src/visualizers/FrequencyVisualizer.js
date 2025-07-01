@@ -4,7 +4,7 @@ import { BaseVisualizer } from "./BaseVisualizer";
 
 const LOW_COLOR = "#5630FF";
 const HIGH_COLOR = "#59C9FF";
-const COLOR_SCALE = chroma.scale([LOW_COLOR, HIGH_COLOR]);
+const COLOR_SCALE = chroma.scale([LOW_COLOR, HIGH_COLOR]).mode("hsl");
 const VOLUME_WINDOW_SECONDS = 10;
 const MAX_FREQUENCY_BARS = 150;
 
@@ -12,6 +12,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
   constructor(options) {
     super(options);
     this.volumeHistory = [];
+    this.barAmplitudeHistory = [];
   }
 
   draw(ctx, features, canvas, sampleRate, bufferLength) {
@@ -34,13 +35,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
       return;
     }
 
-    // Calculate color based on volume compared to average volume
     const { volume, frequencyData } = features;
-    const avgVolume = _.mean(this.volumeHistory) ?? 0;
-    let colorPercent = volume / avgVolume - 1;
-    colorPercent = Math.max(0, colorPercent);
-    colorPercent = Math.min(1, colorPercent);
-    const color = COLOR_SCALE(colorPercent).hex();
 
     // Update volume history
     const bufferLengthSeconds = bufferLength / sampleRate;
@@ -80,8 +75,12 @@ export class FrequencyVisualizer extends BaseVisualizer {
       barCount
     );
 
+    // Update bar amplitude history and calculate per-bar colors
+    this.updateBarAmplitudeHistory(melScaledData, volumeHistoryMaxLength);
+    const barColors = this.calculateBarColors(melScaledData);
+
     // Draw bars in all four quadrants
-    this.drawQuadrantBars(ctx, melScaledData, color, backgroundColor, {
+    this.drawQuadrantBars(ctx, melScaledData, barColors, backgroundColor, {
       centerX,
       centerY,
       quadrantHeight,
@@ -118,12 +117,13 @@ export class FrequencyVisualizer extends BaseVisualizer {
     return resampled;
   }
 
-  drawQuadrantBars(ctx, resampledData, color, backgroundColor, params) {
+  drawQuadrantBars(ctx, resampledData, barColors, backgroundColor, params) {
     const { centerX, centerY, barCount, barWidth, maxBarHeight } = params;
 
     for (let i = 0; i < barCount; i++) {
       const amplitude = resampledData[i] / 255; // Normalize to 0-1
       const barHeight = Math.max(0, amplitude * maxBarHeight);
+      const color = barColors[i];
 
       // Calculate positions for top-right quadrant
       const baseX = centerX + i * barWidth;
@@ -224,5 +224,51 @@ export class FrequencyVisualizer extends BaseVisualizer {
     }
 
     return melScaledData;
+  }
+
+  updateBarAmplitudeHistory(melScaledData, maxHistoryLength) {
+    // Initialize history array if needed
+    if (this.barAmplitudeHistory.length === 0) {
+      this.barAmplitudeHistory = new Array(melScaledData.length)
+        .fill(null)
+        .map(() => []);
+    }
+
+    // Update each bar's amplitude history
+    for (let i = 0; i < melScaledData.length; i++) {
+      const barHistory = this.barAmplitudeHistory[i];
+
+      // Remove old entries if at max length
+      if (barHistory.length >= maxHistoryLength) {
+        barHistory.shift();
+      }
+
+      // Add current amplitude
+      barHistory.push(melScaledData[i]);
+    }
+  }
+
+  calculateBarColors(melScaledData) {
+    const colors = [];
+
+    for (let i = 0; i < melScaledData.length; i++) {
+      const currentAmplitude = melScaledData[i];
+      const barHistory = this.barAmplitudeHistory[i] || [];
+
+      // Calculate average amplitude for this bar
+      const avgAmplitude = barHistory.length > 0 ? _.mean(barHistory) : 0;
+
+      // Calculate color percentage based on current vs average amplitude
+      let colorPercent =
+        avgAmplitude > 0 ? currentAmplitude / avgAmplitude - 1 : 0;
+      colorPercent = Math.max(0, colorPercent);
+      colorPercent = Math.min(1, colorPercent);
+
+      // Generate color for this bar
+      const color = COLOR_SCALE(colorPercent).hex();
+      colors.push(color);
+    }
+
+    return colors;
   }
 }
