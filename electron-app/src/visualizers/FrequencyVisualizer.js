@@ -6,6 +6,7 @@ const LOW_COLOR = "#5630FF";
 const HIGH_COLOR = "#59C9FF";
 const COLOR_SCALE = chroma.scale([LOW_COLOR, HIGH_COLOR]);
 const VOLUME_WINDOW_SECONDS = 10;
+const MAX_FREQUENCY_BARS = 100;
 
 export class FrequencyVisualizer extends BaseVisualizer {
   constructor(options) {
@@ -55,20 +56,19 @@ export class FrequencyVisualizer extends BaseVisualizer {
     const musicalRangeEnd = Math.floor(frequencyData.length * 0.6);
     const musicalFreqData = frequencyData.slice(0, musicalRangeEnd);
 
-    // Calculate bar dimensions to perfectly fill canvas width
+    // Calculate bar dimensions with configurable maximum
     const minBarWidth = 2;
-    const maxBars = Math.floor(canvasWidth / minBarWidth);
-    const barCount = Math.min(musicalFreqData.length, maxBars);
+    const canvasMaxBars = Math.floor(canvasWidth / minBarWidth);
+    const barCount = Math.min(musicalFreqData.length, canvasMaxBars, MAX_FREQUENCY_BARS);
     const barWidth = canvasWidth / barCount;
     const maxBarHeight = canvasHeight * 0.9;
     const bottomMargin = canvasHeight * 0.05;
 
-    // Sample musical frequency data
-    const step = Math.floor(musicalFreqData.length / barCount);
+    // Resample frequency data to match bar count using averaging
+    const resampledData = this.resampleFrequencyData(musicalFreqData, barCount);
 
     for (let i = 0; i < barCount; i++) {
-      const dataIndex = i * step;
-      const amplitude = musicalFreqData[dataIndex] / 255; // Normalize to 0-1
+      const amplitude = resampledData[i] / 255; // Normalize to 0-1
       const barHeight = Math.max(
         canvasHeight * 0.005,
         amplitude * maxBarHeight
@@ -93,5 +93,31 @@ export class FrequencyVisualizer extends BaseVisualizer {
         ctx.strokeRect(x, y, barWidth, barHeight);
       }
     }
+  }
+
+  resampleFrequencyData(frequencyData, targetLength) {
+    if (frequencyData.length <= targetLength) {
+      return frequencyData;
+    }
+
+    const resampled = [];
+    const binSize = frequencyData.length / targetLength;
+
+    for (let i = 0; i < targetLength; i++) {
+      const startIndex = Math.floor(i * binSize);
+      const endIndex = Math.floor((i + 1) * binSize);
+      
+      let sum = 0;
+      let count = 0;
+
+      for (let j = startIndex; j < endIndex && j < frequencyData.length; j++) {
+        sum += frequencyData[j];
+        count++;
+      }
+
+      resampled[i] = count > 0 ? sum / count : 0;
+    }
+
+    return resampled;
   }
 }

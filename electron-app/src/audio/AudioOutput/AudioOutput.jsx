@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const VISUAL_DELAY_SECONDS = 0.0;
 
+const DEFAULT_DEVICES = ["external headphones", "linkbuds"];
+
 const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
   const [isForwarding, setIsForwarding] = useState(false);
   const [outputDevices, setOutputDevices] = useState([]);
@@ -19,8 +21,13 @@ const AudioOutput = ({ audioContext, sourceNode, delaySeconds }) => {
       setOutputDevices(audioOutputs);
 
       // Set default device if available
+      const defaultDeviceName = DEFAULT_DEVICES.find((deviceName) => {
+        return !!audioOutputs.find((device) => {
+          return device.label.toLowerCase().includes(deviceName);
+        });
+      });
       const defaultDevice = audioOutputs.find((device) => {
-        return device.label.toLowerCase().includes("external headphones");
+        return device.label.toLowerCase().includes(defaultDeviceName);
       });
       if (defaultDevice?.deviceId) {
         setSelectedDevice(defaultDevice.deviceId);
