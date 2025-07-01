@@ -65,25 +65,26 @@ export class FrequencyVisualizer extends BaseVisualizer {
     // Calculate bar dimensions with configurable maximum for quadrant
     const minBarWidth = 2;
     const quadrantMaxBars = Math.floor(quadrantWidth / minBarWidth);
-    const barCount = Math.min(musicalFreqData.length, quadrantMaxBars, MAX_FREQUENCY_BARS);
+    const barCount = Math.min(
+      musicalFreqData.length,
+      quadrantMaxBars,
+      MAX_FREQUENCY_BARS
+    );
     const barWidth = quadrantWidth / barCount;
     const maxBarHeight = quadrantHeight * 0.9;
-    const bottomMargin = quadrantHeight * 0.05;
 
     // Resample frequency data to match bar count using averaging
     const resampledData = this.resampleFrequencyData(musicalFreqData, barCount);
 
     // Draw bars in all four quadrants
-    this.drawQuadrantBars(ctx, resampledData, color, {
+    this.drawQuadrantBars(ctx, resampledData, color, backgroundColor, {
       centerX,
       centerY,
-      quadrantWidth,
       quadrantHeight,
       barCount,
       barWidth,
       maxBarHeight,
-      bottomMargin,
-      canvasWidth
+      canvasWidth,
     });
   }
 
@@ -98,7 +99,7 @@ export class FrequencyVisualizer extends BaseVisualizer {
     for (let i = 0; i < targetLength; i++) {
       const startIndex = Math.floor(i * binSize);
       const endIndex = Math.floor((i + 1) * binSize);
-      
+
       let sum = 0;
       let count = 0;
 
@@ -113,46 +114,48 @@ export class FrequencyVisualizer extends BaseVisualizer {
     return resampled;
   }
 
-  drawQuadrantBars(ctx, resampledData, color, params) {
-    const {
-      centerX,
-      centerY,
-      quadrantWidth,
-      quadrantHeight,
-      barCount,
-      barWidth,
-      maxBarHeight,
-      bottomMargin,
-      canvasWidth
-    } = params;
+  drawQuadrantBars(ctx, resampledData, color, backgroundColor, params) {
+    const { centerX, centerY, barCount, barWidth, maxBarHeight } = params;
 
     for (let i = 0; i < barCount; i++) {
       const amplitude = resampledData[i] / 255; // Normalize to 0-1
-      const barHeight = Math.max(
-        quadrantHeight * 0.005,
-        amplitude * maxBarHeight
-      );
+      const barHeight = Math.max(0, amplitude * maxBarHeight);
 
       // Calculate positions for top-right quadrant
-      const baseX = centerX + (i * barWidth);
-      const baseY = centerY - barHeight - bottomMargin;
+      const baseX = centerX + i * barWidth;
+      const baseY = centerY - barHeight;
 
-      // Create gradient for each bar
-      const gradient = ctx.createLinearGradient(0, baseY, 0, baseY + barHeight);
-      gradient.addColorStop(0, color);
-      gradient.addColorStop(1, color + "44");
+      // Create gradients for top and bottom bars
+      const topGradient = ctx.createLinearGradient(
+        0,
+        baseY,
+        0,
+        baseY + barHeight
+      );
+      topGradient.addColorStop(0, color);
+      topGradient.addColorStop(1, color + "66");
 
-      ctx.fillStyle = gradient;
+      const bottomY = centerY;
+      const bottomGradient = ctx.createLinearGradient(
+        0,
+        bottomY,
+        0,
+        bottomY + barHeight
+      );
+      bottomGradient.addColorStop(0, color + "66");
+      bottomGradient.addColorStop(1, color);
+
+      const leftX = centerX - i * barWidth - barWidth;
 
       // Top-right quadrant (original)
+      ctx.fillStyle = topGradient;
       ctx.fillRect(baseX, baseY, barWidth, barHeight);
 
       // Top-left quadrant (reflect about Y-axis)
-      const leftX = centerX - (i * barWidth) - barWidth;
       ctx.fillRect(leftX, baseY, barWidth, barHeight);
 
       // Bottom-right quadrant (reflect about X-axis)
-      const bottomY = centerY + bottomMargin;
+      ctx.fillStyle = bottomGradient;
       ctx.fillRect(baseX, bottomY, barWidth, barHeight);
 
       // Bottom-left quadrant (reflect about both axes)
@@ -160,9 +163,8 @@ export class FrequencyVisualizer extends BaseVisualizer {
 
       // Draw subtle bar outlines only if bars are wide enough
       if (barWidth > 3) {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = Math.max(canvasWidth * 0.0005, 0.5);
-        
+        ctx.strokeStyle = backgroundColor;
+
         // Outline all four quadrants
         ctx.strokeRect(baseX, baseY, barWidth, barHeight);
         ctx.strokeRect(leftX, baseY, barWidth, barHeight);
